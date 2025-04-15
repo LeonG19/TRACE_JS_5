@@ -4,6 +4,7 @@ from urllib.parse import urljoin, urlparse
 import time, json, os
 from collections import deque
 import asyncio
+from http_tester import send_http_request
 
 class Crawler:
     def __init__(self, json_filename='crawl_results.json'): #this feels incorrect but idk how else to handle json
@@ -23,21 +24,23 @@ class Crawler:
         self.stop_flag = False
         self.pause_flag = False
         # here use the user agent string for requests
-    #fine for backend
-    def fetch_page(self, url): #fetching html data
+
+    def fetch_page(self, url):
         try:
             headers = {}
-            if self.user_agent_string != '':
+            if self.user_agent_string:
                 headers["User-Agent"] = self.user_agent_string
-            response = requests.get(url, timeout=5, headers=headers) # here use the user agent string for requests
-            if response.status_code == 200: # takes valid urls
-                return False #No error found (this is for table)
+            
+            #using http requester from team 6 here
+            result = send_http_request(url, method="GET", headers=headers)
+            if result.get("status_code") == 200:
+                return result
             else:
-                return True # returning true if error occured (this is for the table)
-        except requests.RequestException: #general exeption catching we will have an error handler class to handle this
-            return True #returning true since error must have occursed (this is for the table)
-    
-    #fine for backend
+                return None
+        except Exception as e:
+            print(f"[fetch_page ERROR] {e}")
+            return None
+
     def retreieve_links_to_crawl(self, parsed_html, base_url):
         """Extracts and returns valid links from an HTML page."""
         links = set()
@@ -47,7 +50,6 @@ class Crawler:
                 links.add(full_url)
         return links
 
-    #fine for backend
     def is_valid_url(self, url): #I think I wrote this wrong but this should effectively avoid a looping issue where the url visits itself or visits one from before
         parsed = urlparse(url)
         return parsed.netloc == urlparse(self.start_url).netloc and url not in self.visited_urls
@@ -65,8 +67,6 @@ class Crawler:
         word_count = len(words)
         link_count = len(links)
         title = parsed_html.title.string if parsed_html and parsed_html.title else "No Title"
-        #for debugging
-        #print(f"Crawled info: URL={url}, Title={title}, Word Count={word_count}, Char Count={char_count}, Link Count={link_count}, Error={error}")
 
         crawled_urls_entry = {
             'id': len(self.crawled_urls),
@@ -81,6 +81,7 @@ class Crawler:
         # return url_info
         self.crawled_urls.append(crawled_urls_entry)
 
+    # this function adds the results to the json file, WILL NEED TO CHANGE TO SAVE ON DB
     def save_json(self):
         try:
 
@@ -106,7 +107,10 @@ class Crawler:
         except Exception as e:
             print(f"Error saving JSON: {e}")
 
+
     async def start_crawl(self, crawler_params): # starting crawling sequence
+
+        #sets up crawler state and params
         self.configure_crawler(crawler_params)
         self.stop_flag = False
         self.total_pages = self.max_pages if self.max_pages else float('inf')  # Set total pages
@@ -138,12 +142,13 @@ class Crawler:
                 continue
 
             self.visited_urls.add(url)
-            error_occurred = self.fetch_page(url)
-
-            if not error_occurred:
-                response = requests.get(url, timeout=5, headers={"User-Agent": self.user_agent_string})
-                if response.status_code == 200:
-                    html = response.text  # Use the HTML content from the successful response
+            fetched_page = self.fetch_page(url)
+            
+            #status code based on team 6 http requester, if valid begin crawl on that url, else error out
+            if fetched_page:
+                response = fetched_page
+                if response["status_code"] == 200:
+                    html = response["body"]  # Use the HTML content from the successful response
                     parsed_html = BeautifulSoup(html, "html.parser")
                     # sets up crawled urls info
                     links = self.retreieve_links_to_crawl(parsed_html, url)
@@ -180,14 +185,15 @@ class Crawler:
         self.requests_per_sec = round(((len(self.crawled_urls)) / self.crawl_time), 2)
         self.save_json()
 
+    # straight forward
     def stop_crawl(self):
         self.stop_flag = True
-
     def pause_crawl(self):
         self.pause_flag = True
     def resume_crawl(self):
         self.pause_flag = False
 
+    # config crawler
     def configure_crawler(self, crawler_params):
         self.start_url = crawler_params['url']
         

@@ -1,74 +1,11 @@
 [
     {
         "id": 1,
-        "url": "https://discord.com",
-        "title": "Discord - Group Chat That\u00e2\u0080\u0099s All Fun & Games",
-        "word_count": 376,
-        "char_count": 3671,
-        "link_count": 50,
-        "error": false
-    },
-    {
-        "id": 2,
-        "url": "https://discord.com/",
-        "title": "Discord - Group Chat That\u00e2\u0080\u0099s All Fun & Games",
-        "word_count": 376,
-        "char_count": 3671,
-        "link_count": 49,
-        "error": false
-    },
-    {
-        "id": 3,
-        "url": "https://discord.com/ads/quests",
-        "title": "Discord Quests - Advertise Where the World Plays",
-        "word_count": 682,
-        "char_count": 6074,
-        "link_count": 58,
-        "error": false
-    },
-    {
-        "id": 4,
-        "url": "https://discord.com/safety-teen-charter",
-        "title": "A Charter for a Better Place to Hang Out Online | Discord",
-        "word_count": 1091,
-        "char_count": 8728,
-        "link_count": 51,
-        "error": false
-    },
-    {
-        "id": 5,
-        "url": "https://discord.com/category/safety",
-        "title": "Discord Blog",
-        "word_count": 481,
-        "char_count": 4711,
-        "link_count": 82,
-        "error": false
-    },
-    {
-        "id": 6,
-        "url": "https://discord.com/branding",
-        "title": "Discord's Brand Guidelines",
-        "word_count": 527,
-        "char_count": 4703,
-        "link_count": 44,
-        "error": false
-    },
-    {
-        "id": 7,
-        "url": "https://discord.com/gaming",
-        "title": "Gaming | Discord",
-        "word_count": 429,
-        "char_count": 3957,
-        "link_count": 43,
-        "error": false
-    },
-    {
-        "id": 8,
-        "url": "https://discord.com/servers",
-        "title": "Discord Servers - Home",
-        "word_count": 530,
-        "char_count": 4558,
-        "link_count": 47,
-        "error": false
+        "url": "https://apple.com",
+        "title": "No Title",
+        "word_count": 0,
+        "char_count": 0,
+        "link_count": 0,
+        "error": true
     }
 ]
