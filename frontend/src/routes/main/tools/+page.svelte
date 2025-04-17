@@ -16,6 +16,10 @@
     function gotoAI() {
       window.location.href = "/main/tools/AI";
     }
+
+    function gotoHTTPTester() {
+      window.location.href = "/main/tools/HTTPTester";
+    }
     
     </script>
     
@@ -39,6 +43,11 @@
         <div class="row">
           <span> AI Credential Generator </span>
           <button on:click={gotoAI} title="Navigates to the AI Credential Generastor page">Select</button>
+        </div>
+
+        <div class="row">
+          <span> HTTP Tester </span>
+          <button on:click={gotoHTTPTester} title="Navigates to the HTTP Tester page">Select</button>
         </div>
         
       </div>
